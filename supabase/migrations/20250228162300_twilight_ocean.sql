@@ -1,51 +1,11 @@
-/*
-  # Initial Schema for Local Services App
+import { createClient } from '@supabase/supabase-js'
 
-  1. New Tables
-    - `profiles` - Extended user profile information
-      - `id` (uuid, primary key, references auth.users)
-      - `full_name` (text)
-      - `avatar_url` (text)
-      - `bio` (text)
-      - `location` (text)
-      - `phone` (text)
-      - `created_at` (timestamp)
-      - `updated_at` (timestamp)
-    
-    - `categories` - Service categories
-      - `id` (uuid, primary key)
-      - `name` (text, unique)
-      - `icon` (text)
-      - `description` (text)
-      - `created_at` (timestamp)
-    
-    - `services` - Service listings
-      - `id` (uuid, primary key)
-      - `title` (text)
-      - `description` (text)
-      - `price` (numeric)
-      - `price_type` (text) - hourly, fixed, etc.
-      - `image_url` (text)
-      - `user_id` (uuid, references profiles.id)
-      - `category_id` (uuid, references categories.id)
-      - `location` (text)
-      - `active` (boolean)
-      - `created_at` (timestamp)
-      - `updated_at` (timestamp)
-    
-    - `reviews` - Service reviews
-      - `id` (uuid, primary key)
-      - `service_id` (uuid, references services.id)
-      - `user_id` (uuid, references profiles.id)
-      - `rating` (integer)
-      - `comment` (text)
-      - `created_at` (timestamp)
-  
-  2. Security
-    - Enable RLS on all tables
-    - Add policies for authenticated users to read/write their own data
-    - Public read access for categories, services, and reviews
-*/
+const supabaseUrl = 'https://mstyqcngtmymblwbsuyc.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 
 -- Create profiles table
 CREATE TABLE IF NOT EXISTS profiles (
@@ -187,3 +147,53 @@ CREATE TRIGGER update_services_updated_at
 BEFORE UPDATE ON services
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+
+/*
+  # Initial Schema for Local Services App
+
+  1. New Tables
+    - `profiles` - Extended user profile information
+      - `id` (uuid, primary key, references auth.users)
+      - `full_name` (text)
+      - `avatar_url` (text)
+      - `bio` (text)
+      - `location` (text)
+      - `phone` (text)
+      - `created_at` (timestamp)
+      - `updated_at` (timestamp)
+    
+    - `categories` - Service categories
+      - `id` (uuid, primary key)
+      - `name` (text, unique)
+      - `icon` (text)
+      - `description` (text)
+      - `created_at` (timestamp)
+    
+    - `services` - Service listings
+      - `id` (uuid, primary key)
+      - `title` (text)
+      - `description` (text)
+      - `price` (numeric)
+      - `price_type` (text) - hourly, fixed, etc.
+      - `image_url` (text)
+      - `user_id` (uuid, references profiles.id)
+      - `category_id` (uuid, references categories.id)
+      - `location` (text)
+      - `active` (boolean)
+      - `created_at` (timestamp)
+      - `updated_at` (timestamp)
+    
+    - `reviews` - Service reviews
+      - `id` (uuid, primary key)
+      - `service_id` (uuid, references services.id)
+      - `user_id` (uuid, references profiles.id)
+      - `rating` (integer)
+      - `comment` (text)
+      - `created_at` (timestamp)
+  
+  2. Security
+    - Enable RLS on all tables
+    - Add policies for authenticated users to read/write their own data
+    - Public read access for categories, services, and reviews
+*/
