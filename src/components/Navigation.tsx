@@ -1,9 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Search, User, Bell } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, Search, User, Bell, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
+import { useAuthContext } from '../contexts/AuthContext';
 
 export function Navigation() {
+  const { user, signOut } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4">
@@ -30,9 +43,28 @@ export function Navigation() {
             <Button variant="ghost" size="sm">
               <Bell className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <User className="h-5 w-5" />
-            </Button>
+            
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <Link to="/profile">
+                  <Button variant="ghost" size="sm">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link to="/login">
+                  <Button variant="ghost">Sign In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button>Sign Up</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
